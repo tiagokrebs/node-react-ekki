@@ -2,7 +2,7 @@ const apiRoute = require('./apis');
 
 const init = (server) => {
     server.get('*', function (req, res, next) {
-        console.log('Requisicao  para: ' + req.originalUrl);
+        console.log('Requisição: ' + req.method + ' ' + req.originalUrl);
         return next();
     });
 

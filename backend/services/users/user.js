@@ -1,24 +1,37 @@
+/**
+ * Serviços para controle dos usuários do sistema
+ * 
+ * Funções assíncronas e Promisses são integradas
+ * Objetos Responde obtidos de Router são retornados com o código HTTP,
+ * dados e mensagem de acordo com cada resultado de operação
+ */
+
 const User = require('../../models/user');
 
-const getUsers = (req, res, next) => {
+/**
+ * Obtenção da lista de usuários cadastrados no sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
+const getUsers = async (req, res, next) => {
     try {
         User.find()
             .then(users => {
-                console.log('users', users);
                 if (users.length > 0) {
                     return res.status(200).json({
                         'message': 'usuários obtidos com sucesso',
                         'data': users
                     });
                 }
-        
+
                 return res.status(404).json({
                     'code': 'BAD_REQUEST_ERROR',
                     'description': 'nenhum usuário encontrado'
                 });
             })
-            .catch((error) => {
-                console.log(error);
+            .catch((erro) => {
+                console.log(erro);
                 return res.status(500).json({
                     'code': 'SERVER_ERROR',
                     'description': 'algo deu errado, tente novamente'
@@ -26,6 +39,7 @@ const getUsers = (req, res, next) => {
             });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             'code': 'SERVER_ERROR',
             'description': 'algo deu errado, tente novamente'
@@ -33,23 +47,38 @@ const getUsers = (req, res, next) => {
     }
 }
 
+/**
+ * Obtenção dos dados de um usuário cadastrado no sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
 const getUserById = async (req, res, next) => {
     try {
-        let user = await User.findById(req.params.id);
-        if (user) {
-            return res.status(200).json({
-                'message': `usuário id ${req.params.id} obtido com sucesso`,
-                'data': user
-            });
-        }
+        User.findById(req.params.id)
+            .then(user => {
+                if (user.length > 0) {
+                    return res.status(200).json({
+                        'message': `usuário id ${req.params.id} obtido com sucesso`,
+                        'data': user
+                    });
+                }
 
-        return res.status(404).json({
-            'code': 'BAD_REQUEST_ERROR',
-            'description': 'nenhum usuário encontrado'
-        });
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhum usuário encontrado'
+                });
+            })
+            .catch(() => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
 
     } catch (error) {
-
+        console.log(error);
         return res.status(500).json({
             'code': 'SERVER_ERROR',
             'description': 'algo deu errado, tente novamente'
@@ -57,59 +86,79 @@ const getUserById = async (req, res, next) => {
     }
 }
 
+/**
+ * Criação de um novo usuário no sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
 const createUser = async (req, res, next) => {
     try {
 
         const {
-            name,
-            email
+            nome,
+            cpf,
+            telefone
         } = req.body;
 
-        if (name === undefined || name === '') {
+        if (nome === undefined || nome === '') {
             return res.status(422).json({
                 'code': 'REQUIRED_FIELD_MISSING',
                 'description': 'nome é obrigatório',
-                'field': 'name'
+                'field': 'nome'
             });
         }
 
-        if (email === undefined || email === '') {
+        if (cpf === undefined || cpf === '') {
             return res.status(422).json({
                 'code': 'REQUIRED_FIELD_MISSING',
-                'description': 'email é obrigatório',
-                'field': 'email'
+                'description': 'cpf é obrigatório',
+                'field': 'cpf'
             });
         }
 
-
-        let isEmailExists = await User.findOne({
-            "email": email
-        });
-
-        if (isEmailExists) {
-            return res.status(409).json({
-                'code': 'ENTITY_ALREAY_EXISTS',
-                'description': 'email já existe',
-                'field': 'email'
+        if (telefone === undefined || telefone === '') {
+            return res.status(422).json({
+                'code': 'REQUIRED_FIELD_MISSING',
+                'description': 'telefone é obrigatório',
+                'field': 'telefone'
             });
         }
 
-        const temp = {
-            name: name,
-            email: email
-        }
+        User.cpfExists(cpf)
+            .then((cpfExists) => {
+                if (cpfExists) {
+                    return res.status(409).json({
+                        'code': 'ENTITY_ALREAY_EXISTS',
+                        'description': 'cpf já existe',
+                        'field': 'cpf'
+                    });
+                } else {
+                    const temp = {
+                        nome: nome,
+                        cpf: cpf,
+                        telefone: telefone
+                    }
 
-        let newUser = await User.create(temp);
-
-        if (newUser) {
-            return res.status(201).json({
-                'message': 'usuário criado com sucesso',
-                'data': newUser
+                    User.create(temp)
+                        .then((newUser) => {
+                            return res.status(201).json({
+                                'message': 'usuário criado com sucesso',
+                                'data': newUser
+                            });
+                        })
+                        .catch(() => {
+                            console.log(erro);
+                            return res.status(500).json({
+                                'code': 'SERVER_ERROR',
+                                'description': 'algo deu errado, tente novamente'
+                            });
+                        });
+                }
             });
-        } else {
-            throw new Error('algo deu errado');
-        }
+
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             'code': 'SERVER_ERROR',
             'description': 'algo deu errado, tente novamente'
@@ -117,62 +166,80 @@ const createUser = async (req, res, next) => {
     }
 }
 
+/**
+ * Atualização dos dados de um usuário existente no sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
 const updateUser = async (req, res, next) => {
     try {
-
 
         const userId = req.params.id;
 
         const {
-            name,
-            email
+            nome,
+            cpf,
+            telefone
         } = req.body;
 
-        if (name === undefined || name === '') {
+        if (nome === undefined || nome === '') {
             return res.status(422).json({
                 'code': 'REQUIRED_FIELD_MISSING',
                 'description': 'nome é obrigatório',
-                'field': 'name'
+                'field': 'nome'
             });
         }
 
-        if (email === undefined || email === '') {
+        if (cpf === undefined || cpf === '') {
             return res.status(422).json({
                 'code': 'REQUIRED_FIELD_MISSING',
-                'description': 'email é obrigatório',
-                'field': 'email'
+                'description': 'cpf é obrigatório',
+                'field': 'cpf'
             });
         }
 
-
-        let isUserExists = await User.findById(userId);
-
-        if (!isUserExists) {
-            return res.status(404).json({
-                'code': 'BAD_REQUEST_ERROR',
-                'description': 'usuário não encontrado no sistema'
+        if (telefone === undefined || telefone === '') {
+            return res.status(422).json({
+                'code': 'REQUIRED_FIELD_MISSING',
+                'description': 'telefone é obrigatório',
+                'field': 'telefone'
             });
         }
 
-        const temp = {
-            name: name,
-            email: email
-        }
+        User.findById(userId)
+            .then(user => {
+                if (!user.length > 0) {
+                    return res.status(404).json({
+                        'code': 'BAD_REQUEST_ERROR',
+                        'description': 'usuário não encontrado no sistema'
+                    });
+                } else {
+                    const temp = {
+                        nome: nome,
+                        cpf: cpf,
+                        telefone: telefone
+                    }
 
-        let updateUser = await User.findByIdAndUpdate(userId, temp, {
-            new: true
-        });
-
-        if (updateUser) {
-            return res.status(200).json({
-                'message': 'usuário atualizado com sucesso',
-                'data': updateUser
+                    User.findByIdAndUpdate(userId, temp)
+                    .then((updateUser) => {
+                        return res.status(200).json({
+                            'message': `usuário id ${userId} atualizado com sucesso`,
+                            'data': updateUser
+                        });
+                    })
+                    .catch((erro) => {
+                        console.log(erro);
+                        return res.status(500).json({
+                            'code': 'SERVER_ERROR',
+                            'description': 'algo deu errado, tente novamente'
+                        });
+                    });
+                }
             });
-        } else {
-            throw new Error('algo deu errado');
-        }
+
     } catch (error) {
-
+        console.log(error);
         return res.status(500).json({
             'code': 'SERVER_ERROR',
             'description': 'algo deu errado, tente novamente'
@@ -180,22 +247,43 @@ const updateUser = async (req, res, next) => {
     }
 }
 
+/**
+ * Remoção do usuário do sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
 const deleteUser = async (req, res, next) => {
     try {
-        let user = await User.findByIdAndRemove(req.params.id);
-        if (user) {
-            return res.status(204).json({
-                'message': `usuário id ${req.params.id} deletado com sucesso`
-            });
-        }
 
-        return res.status(404).json({
-            'code': 'BAD_REQUEST_ERROR',
-            'description': 'usuário não encontrado no sistema'
-        });
+        const userId = req.params.id;
+
+        User.findById(userId)
+            .then(user => {
+                if (!user.length > 0) {
+                    return res.status(404).json({
+                        'code': 'BAD_REQUEST_ERROR',
+                        'description': 'usuário não encontrado no sistema'
+                    });
+                } else {
+                    User.findByIdAndRemove(userId)
+                    .then(() => {
+                        return res.status(200).json({
+                            'message': `usuário id ${userId} removido com sucesso`
+                        });
+                    })
+                    .catch((erro) => {
+                        console.log(erro);
+                        return res.status(500).json({
+                            'code': 'SERVER_ERROR',
+                            'description': 'algo deu errado, tente novamente'
+                        });
+                    });
+                }
+            });
 
     } catch (error) {
-
+        console.log(error);
         return res.status(500).json({
             'code': 'SERVER_ERROR',
             'description': 'algo deu errado, tente novamente'

@@ -1,3 +1,11 @@
+/**
+ * Rotas da API para controle dos usuários
+ * 
+ * Cada rota referncia um serviço e retorna a resposta obtida
+ * Os serviços são implementados em outro módulo para melhor
+ * compreesão e escalabilidade do fonte
+ */
+
 const express = require('express');
 const userService = require('../../services/users/user');
 

@@ -44,8 +44,8 @@ module.exports = function () {
                         } else {
                             // adiciona alguns usuários para teste
                             var insert = 'INSERT INTO usuarios (nome, cpf, telefone, senha) VALUES (?,?,?,?)'
-                            db.run(insert, ["Tiago Krebs", "01492877042", "51999766783", md5("tk014")])
-                            db.run(insert, ["Ana Giulia Kist", "44444444444", "51981891919", md5("agk444")])
+                            db.run(insert, ["Tiago Krebs", "01492877042", "51999766783", md5("01492877042")])
+                            db.run(insert, ["Ana Giulia Kist", "44444444444", "51981891919", md5("44444444444")])
 
                             // adiciona as contas para os usuários teste
 
