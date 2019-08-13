@@ -8,6 +8,7 @@
 
 const User = require('../../models/user');
 const Conta = require('../../models/conta');
+const Favorecido = require('../../models/favorecido');
 
 /**
  * Obtenção da lista de usuários cadastrados no sistema
@@ -331,11 +332,54 @@ const getContasByUserId = async (req, res, next) => {
     }
 }
 
+/**
+ * Obtenção dos favorecidos de um usuário do sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
+const getFavorecidosByuserId = async (req, res, next) => {
+
+    UserId = req.params.id;
+
+    try {
+        Favorecido.findByUserId(req.params.id)
+            .then(favorecidos => {
+                if (favorecidos.length > 0) {
+                    return res.status(200).json({
+                        'message': `favorecidos obtidos com sucesso`,
+                        'data': favorecidos
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhum favorecido encontrado'
+                });
+            })
+            .catch(() => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            'code': 'SERVER_ERROR',
+            'description': 'algo deu errado, tente novamente'
+        });
+    }
+}
+
 module.exports = {
     getUsers: getUsers,
     getUserById: getUserById,
     createUser: createUser,
     updateUser: updateUser,
     deleteUser: deleteUser,
-    getContasByUserId: getContasByUserId
+    getContasByUserId: getContasByUserId,
+    getFavorecidosByuserId: getFavorecidosByuserId
 }

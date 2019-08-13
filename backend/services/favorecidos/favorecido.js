@@ -11,6 +11,72 @@ const User = require('../../models/user');
 const Conta = require('../../models/conta');
 
 /**
+ * Obtenção da lista de favorecidos do sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
+const getFavorecidos = async (req, res, next) => {
+
+    const userId = req.query.user;
+
+    try {
+        if (userId !== undefined) {
+            Favorecido.findByUserId(userId)
+            .then(favorecidos => {
+                if (favorecidos.length > 0) {
+                    return res.status(200).json({
+                        'message': 'favorecidos obtidos com sucesso',
+                        'data': favorecidos
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhum favorecido encontrada'
+                });
+            })
+            .catch((erro) => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+        } else {
+            Favorecido.find()
+            .then(favorecidos => {
+                if (favorecidos.length > 0) {
+                    return res.status(200).json({
+                        'message': 'favorecidos obtidos com sucesso',
+                        'data': favorecidos
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhuma favorecido encontrado'
+                });
+            })
+            .catch((erro) => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            'code': 'SERVER_ERROR',
+            'description': 'algo deu errado, tente novamente'
+        });
+    }
+}
+
+/**
  * Criação de um novo usuário no sistema
  * @param {object} req O objeto com os dados da requisição
  * @param {object} res O Objeto com os dados da resposta para a requisição
@@ -125,6 +191,7 @@ const deleteFavorecido = async (req, res, next) => {
 }
 
 module.exports = {
+    getFavorecidos: getFavorecidos,
     createFavorecido: createFavorecido,
     deleteFavorecido: deleteFavorecido
 }

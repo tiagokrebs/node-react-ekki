@@ -13,6 +13,5 @@ let router = express.Router();
 
 router.get('/', contaService.getContas);
 router.get('/:id', contaService.getContaById);
-router.get('/:id/favorecidos', contaService.getFavorecidosByContaId);
 
 module.exports = router;

@@ -13,6 +13,31 @@ const md5 = require('md5');
 const Conta = require('../models/conta');
 
 /**
+ * Obtem lista de favorecidos do sistema
+ */
+const find = () => {
+    return new Promise((resolve, reject) => {
+        let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
+            if (erro) {
+                throw erro
+            } else {
+                
+                let sql = 'SELECT * FROM favorecidos;';
+
+                db.all(sql, [], (erro, rows) => {
+                    if (erro) {
+                        reject(erro);
+                    }
+                    resolve(rows);
+                });
+
+                db.close();
+            }
+        });
+    });
+}
+
+/**
  * Inserção de um novo usuário do sistema
  * @param {object} data Um objeto com os dados do usuário
  */
@@ -75,17 +100,17 @@ const findByIdAndRemove = (userId, contaId) => {
 }
 
 /**
- * Obtem favorecidos de acordo com identificação da conta
- * @param {number} id Um código de identificação da conta
+ * Obtem favorecidos de acordo com identificação do usuário
+ * @param {number} id Um código de identificação do usuário
  */
-const findByContaId = (id) => {
+const findByUserId = (id) => {
     return new Promise((resolve, reject) => {
         let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
             if (erro) {
                 throw erro
             } else {
                 
-                let sql = 'SELECT * FROM favorecidos WHERE conta_id = ?';
+                let sql = 'SELECT * FROM favorecidos WHERE usuario_id = ?';
 
                 db.all(sql, [id], (erro, rows) => {
                     if (erro) {
@@ -101,7 +126,8 @@ const findByContaId = (id) => {
 }
 
 module.exports = {
+    find: find,
     create: create,
     findByIdAndRemove: findByIdAndRemove,
-    findByContaId: findByContaId
+    findByUserId: findByUserId
 }

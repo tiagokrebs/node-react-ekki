@@ -14,6 +14,7 @@ let router = express.Router();
 router.get('/', userService.getUsers);
 router.get('/:id', userService.getUserById);
 router.get('/:id/contas', userService.getContasByUserId);
+router.get('/:id/favorecidos', userService.getFavorecidosByuserId);
 router.post('/', userService.createUser);
 router.put('/:id', userService.updateUser);
 router.delete('/:id', userService.deleteUser);

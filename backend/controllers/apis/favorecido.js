@@ -11,6 +11,7 @@ const favorecidoService = require('../../services/favorecidos/favorecido');
 
 let router = express.Router();
 
+router.get('/', favorecidoService.getFavorecidos);
 router.post('/', favorecidoService.createFavorecido);
 router.delete('/:usuarioId/:contaId', favorecidoService.deleteFavorecido);
 

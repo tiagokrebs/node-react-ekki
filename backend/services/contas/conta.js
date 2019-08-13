@@ -7,7 +7,6 @@
  */
 
 const Conta = require('../../models/conta');
-const Favorecido = require('../../models/favorecido');
 
 /**
  * Obtenção da lista de contas do sistema
@@ -16,8 +15,12 @@ const Favorecido = require('../../models/favorecido');
  * @param {function} next A função para passagem do controle para a próxima middleware
  */
 const getContas = async (req, res, next) => {
+
+    const userId = req.query.user;
+
     try {
-        Conta.find()
+        if (userId !== undefined) {
+            Conta.findByUserId(userId)
             .then(contas => {
                 if (contas.length > 0) {
                     return res.status(200).json({
@@ -38,6 +41,29 @@ const getContas = async (req, res, next) => {
                     'description': 'algo deu errado, tente novamente'
                 });
             });
+        } else {
+            Conta.find()
+            .then(contas => {
+                if (contas.length > 0) {
+                    return res.status(200).json({
+                        'message': 'contas obtidas com sucesso',
+                        'data': contas
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhuma conta encontrada'
+                });
+            })
+            .catch((erro) => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+        }
 
     } catch (error) {
         console.log(error);
@@ -87,50 +113,7 @@ const getContaById = async (req, res, next) => {
     }
 }
 
-/**
- * Obtenção dos favorecidos de uma conta do sistema
- * @param {object} req O objeto com os dados da requisição
- * @param {object} res O Objeto com os dados da resposta para a requisição
- * @param {function} next A função para passagem do controle para a próxima middleware
- */
-const getFavorecidosByContaId = async (req, res, next) => {
-
-    contaId = req.params.id;
-
-    try {
-        Favorecido.findByContaId(req.params.id)
-            .then(favorecidos => {
-                if (favorecidos.length > 0) {
-                    return res.status(200).json({
-                        'message': `favorecidos obtidos com sucesso`,
-                        'data': favorecidos
-                    });
-                }
-
-                return res.status(404).json({
-                    'code': 'BAD_REQUEST_ERROR',
-                    'description': 'nenhum favorecido encontrado'
-                });
-            })
-            .catch(() => {
-                console.log(erro);
-                return res.status(500).json({
-                    'code': 'SERVER_ERROR',
-                    'description': 'algo deu errado, tente novamente'
-                });
-            });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            'code': 'SERVER_ERROR',
-            'description': 'algo deu errado, tente novamente'
-        });
-    }
-}
-
 module.exports = {
     getContas: getContas,
-    getContaById: getContaById,
-    getFavorecidosByContaId: getFavorecidosByContaId
+    getContaById: getContaById
 }
