@@ -1,5 +1,5 @@
 /**
- * Rotas da API para as contas
+ * Rotas da API para controle dos favorecidos
  * 
  * Cada rota referencia um serviço e retorna a resposta obtida
  * Os serviços são implementados em outro módulo para melhor
@@ -7,12 +7,11 @@
  */
 
 const express = require('express');
-const contaService = require('../../services/contas/conta');
+const favorecidoService = require('../../services/favorecidos/favorecido');
 
 let router = express.Router();
 
-router.get('/', contaService.getContas);
-router.get('/:id', contaService.getContaById);
-router.get('/:id/favorecidos', contaService.getFavorecidosByContaId);
+router.post('/', favorecidoService.createFavorecido);
+router.delete('/:usuarioId/:contaId', favorecidoService.deleteFavorecido);
 
 module.exports = router;

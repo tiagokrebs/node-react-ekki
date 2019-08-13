@@ -1,32 +1,71 @@
 /**
- * Operações com o banco de dados relativas a conta do usuário
+ * Operações com o banco de dados relativas aos favorecidos
  * 
  * O uso de Promisses foi empregado devido a característica assíncrona
  * das funções de sqlite3.Database
  * Exceções são lançadas para o chamador
+ * Apesar de não necessários todos os métodos para CRUD foram implementados
  */
 
 const sqlite3 = require('sqlite3').verbose();
 const dbConfig = require('../configs/db');
 const md5 = require('md5');
+const Conta = require('../models/conta');
 
 /**
- * Obtem lista de contas do sistema
+ * Inserção de um novo usuário do sistema
+ * @param {object} data Um objeto com os dados do usuário
  */
-const find = () => {
+const create = (data) => {
     return new Promise((resolve, reject) => {
         let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
             if (erro) {
                 throw erro
             } else {
                 
-                let sql = 'SELECT * FROM contas;';
+                let sql = 'INSERT INTO favorecidos (usuario_id, conta_id) VALUES (?,?)'
 
-                db.all(sql, [], (erro, rows) => {
+                db.run(sql, [data.usuario_id, data.conta_id], (erro, rows) => {
                     if (erro) {
                         reject(erro);
                     }
-                    resolve(rows);
+
+                    let sql = 'SELECT * FROM favorecidos WHERE usuario_id = ? AND conta_id = ? LIMIT 1';
+
+                    db.all(sql, [data.usuario_id, data.conta_id], (erro, rows) => {
+                        if (erro) {
+                            reject(erro);
+                        }
+
+                        resolve(rows);
+                    });
+                });
+
+                db.close();
+
+            }
+        });
+    });
+}
+
+/**
+ * Remove usuário do sistema
+ * @param {number} userId O código de identificação do usuário
+ */
+const findByIdAndRemove = (userId, contaId) => {
+    return new Promise((resolve, reject) => {
+        let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
+            if (erro) {
+                throw erro
+            } else {
+                console.log(userId, contaId);
+                let sql = 'DELETE FROM favorecidos WHERE usuario_id = ? AND conta_id = ?'
+
+                db.run(sql, [userId, contaId], (erro, rows) => {
+                    if (erro) {
+                        reject(erro);
+                    }
+                    resolve();
                 });
 
                 db.close();
@@ -36,69 +75,17 @@ const find = () => {
 }
 
 /**
- * Obtem conta de acordo com identificação
+ * Obtem favorecidos de acordo com identificação da conta
  * @param {number} id Um código de identificação da conta
  */
-const findById = (id) => {
+const findByContaId = (id) => {
     return new Promise((resolve, reject) => {
         let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
             if (erro) {
                 throw erro
             } else {
                 
-                let sql = 'SELECT * FROM contas WHERE id = ?';
-
-                db.all(sql, [id], (erro, rows) => {
-                    if (erro) {
-                        reject(erro);
-                    }
-                    resolve(rows);
-                });
-
-                db.close();
-            }
-        });
-    });
-}
-
-/**
- * Inserção de uma nova conta no sistema
- * @param {object} data Um objeto com os dados da conta
- */
-const create = (userId) => {
-    return new Promise((resolve, reject) => {
-        let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
-            if (erro) {
-                throw erro
-            } else {
-                
-                let sql = 'INSERT INTO contas (usuario_id, saldo, limite) VALUES (?,?,?)'
-
-                db.run(sql, [userId, 1000, 500], (erro, rows) => {
-                    if (erro) {
-                        reject(erro);
-                    }
-                    resolve(rows);
-                });
-
-                db.close();
-            }
-        });
-    });
-}
-
-/**
- * Obtem conta de acordo com identificação do ususário
- * @param {number} id Um código de identificação do usuário
- */
-const findByUserId = (id) => {
-    return new Promise((resolve, reject) => {
-        let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
-            if (erro) {
-                throw erro
-            } else {
-                
-                let sql = 'SELECT * FROM contas WHERE usuario_id = ?';
+                let sql = 'SELECT * FROM favorecidos WHERE conta_id = ?';
 
                 db.all(sql, [id], (erro, rows) => {
                     if (erro) {
@@ -114,8 +101,7 @@ const findByUserId = (id) => {
 }
 
 module.exports = {
-    find: find,
-    findById: findById,
     create: create,
-    findByUserId: findByUserId
+    findByIdAndRemove: findByIdAndRemove,
+    findByContaId: findByContaId
 }

@@ -10,6 +10,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const dbConfig = require('../configs/db');
 const md5 = require('md5');
+const Conta = require('../models/conta');
 
 /**
  * Obtem lista de usuários do sistema
@@ -105,10 +106,22 @@ const create = (data) => {
                     if (erro) {
                         reject(erro);
                     }
-                    resolve(rows);
+
+                    let sql = 'SELECT * FROM usuarios WHERE cpf = ? LIMIT 1';
+
+                    db.all(sql, [data.cpf], (erro, rows) => {
+                        if (erro) {
+                            reject(erro);
+                        }
+
+                        Conta.create(rows[0].id)
+                            .then(() => resolve(rows))
+                            .catch((erro) => reject(erro));
+                    });
                 });
 
                 db.close();
+
             }
         });
     });

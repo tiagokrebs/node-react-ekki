@@ -7,6 +7,7 @@
  */
 
 const User = require('../../models/user');
+const Conta = require('../../models/conta');
 
 /**
  * Obtenção da lista de usuários cadastrados no sistema
@@ -291,10 +292,50 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+/**
+ * Obtenção das contas de um usuário cadastrado no sistema
+ * @param {object} req O objeto com os dados da requisição
+ * @param {object} res O Objeto com os dados da resposta para a requisição
+ * @param {function} next A função para passagem do controle para a próxima middleware
+ */
+const getContasByUserId = async (req, res, next) => {
+    try {
+        Conta.findByUserId(req.params.id)
+            .then(contas => {
+                if (contas.length > 0) {
+                    return res.status(200).json({
+                        'message': `contas obtida com sucesso`,
+                        'data': contas
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhuma conta encontrada'
+                });
+            })
+            .catch(() => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            'code': 'SERVER_ERROR',
+            'description': 'algo deu errado, tente novamente'
+        });
+    }
+}
+
 module.exports = {
     getUsers: getUsers,
     getUserById: getUserById,
     createUser: createUser,
     updateUser: updateUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    getContasByUserId: getContasByUserId
 }
