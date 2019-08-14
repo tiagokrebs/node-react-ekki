@@ -1,0 +1,21 @@
+{
+  "name": "ekki-4all",
+  "version": "1.0.0",
+  "description": "Projeto full-stack contendo MVC da aplicação teste Ekki.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nf start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tiagokrebs/node-react-ekki.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tiagokrebs/node-react-ekki/issues"
+  },
+  "homepage": "https://github.com/tiagokrebs/node-react-ekki#readme",
+  "dependencies": {}
+}
