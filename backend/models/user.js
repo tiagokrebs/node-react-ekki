@@ -100,7 +100,7 @@ const create = (data) => {
                 throw erro
             } else {
                 
-                let sql = 'INSERT INTO usuarios (nome, cpf, telefone, senha) VALUES (?,?,?,?)'
+                let sql = 'INSERT INTO usuarios (nome, cpf, telefone, token) VALUES (?,?,?,?)'
 
                 db.run(sql, [data.nome, data.cpf, data.telefone, md5(data.cpf)], (erro, rows) => {
                     if (erro) {

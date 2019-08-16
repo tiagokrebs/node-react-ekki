@@ -36,7 +36,7 @@ module.exports = function () {
                     nome TEXT, 
                     cpf TEXT UNIQUE, 
                     telefone TEXT,
-                    senha TEXT,
+                    token TEXT,
                     CONSTRAINT cpf_unique UNIQUE (cpf)
                     )`,
                     (err) => {
@@ -44,7 +44,7 @@ module.exports = function () {
                             // tabela já existe
                         } else {
                             // adiciona alguns usuários para teste
-                            var insert = 'INSERT INTO usuarios (id, nome, cpf, telefone, senha) VALUES (?,?,?,?,?)'
+                            var insert = 'INSERT INTO usuarios (id, nome, cpf, telefone, token) VALUES (?,?,?,?,?)'
                             db.run(insert, [1, "Tiago Krebs", "01492877042", "51999766783", md5("01492877042")])
                             db.run(insert, [2, "Ana Giulia Kist", "44444444444", "51981891919", md5("44444444444")])
                         }
