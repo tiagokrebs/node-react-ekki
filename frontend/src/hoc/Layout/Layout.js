@@ -27,20 +27,32 @@ class Layout extends Component {
     }
 
     render () {
-        return (
+        let layout = (
             <Aux>
-                <Toolbar 
-                    isAuth={this.props.isAuthenticated}
-                    drawerToggleClicked={this.sideDrawerToggleHandler} />
-                <SideDrawer
-                    isAuth={this.props.isAuthenticated}
-                    open={this.state.showSideDrawer}
-                    closed={this.sideDrawerClosedHandler} />
-                <main className={classes.Content}>
+                <main className={classes.ContentHome}>
                     {this.props.children}
                 </main>
             </Aux>
         )
+
+        if (this.props.isAuthenticated) {
+            layout = (
+                <Aux>
+                    <Toolbar 
+                        isAuth={this.props.isAuthenticated}
+                        drawerToggleClicked={this.sideDrawerToggleHandler} />
+                    <SideDrawer
+                        isAuth={this.props.isAuthenticated}
+                        open={this.state.showSideDrawer}
+                        closed={this.sideDrawerClosedHandler} />
+                    <main className={classes.Content}>
+                        {this.props.children}
+                    </main>
+                </Aux>
+            )
+        }
+
+        return layout
     }
 }
 
