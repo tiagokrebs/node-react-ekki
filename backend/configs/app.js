@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const md5 = require('md5');
 const moment = require('moment-timezone');
+const cors = require('cors');
 
 module.exports = function () {
     let server = express(),
@@ -17,6 +18,9 @@ module.exports = function () {
         server.set('port', config.port);
         server.set('hostname', config.hostname);
 
+        // adicina cors policy para app react
+        server.use(cors({ origin: 'http://localhost:3001'}));
+        
         // adiciona middleware para fazer parse de json
         server.use(bodyParser.json());
         server.use(bodyParser.urlencoded({

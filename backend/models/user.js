@@ -109,13 +109,13 @@ const create = (data) => {
 
                     let sql = 'SELECT * FROM usuarios WHERE cpf = ? LIMIT 1';
 
-                    db.all(sql, [data.cpf], (erro, rows) => {
+                    db.get(sql, [data.cpf], (erro, row) => {
                         if (erro) {
                             reject(erro);
                         }
 
-                        Conta.create(rows[0].id)
-                            .then(() => resolve(rows))
+                        Conta.create(row.id)
+                            .then(() => resolve(row))
                             .catch((erro) => reject(erro));
                     });
                 });
