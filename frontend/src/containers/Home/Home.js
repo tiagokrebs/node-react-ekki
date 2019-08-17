@@ -50,7 +50,7 @@ class Home extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
+        this.props.onAuth(this.state.controls.cpf.value, this.state.controls.nome.value, this.state.controls.telefone.value, this.state.acao === 'cadastrar');
     }
 
 
@@ -89,15 +89,17 @@ class Home extends Component {
             }
         }
 
-        form = formElementsArray.map(formElement => (
-            <input 
-                key={formElement.id}
-                type={formElement.config.elementConfig.type}
-                placeholder={formElement.config.elementConfig.placeholder}
-                value={formElement.config.value}
-                onChange={(event) => this.inputChangedHandler(event, formElement.id)}
-                />
-        ));
+        if (this.state.acao !== null) {
+            form = formElementsArray.map(formElement => (
+                <input 
+                    key={formElement.id}
+                    type={formElement.config.elementConfig.type}
+                    placeholder={formElement.config.elementConfig.placeholder}
+                    value={formElement.config.value}
+                    onChange={(event) => this.inputChangedHandler(event, formElement.id)}
+                    />
+            ));
+        }
 
         return (
             <div>
@@ -111,6 +113,9 @@ class Home extends Component {
                             <button>OK</button>
                         </form>
                     )
+                }
+                {
+                    this.props.error ? <p>{this.props.error}</p> : null
                 }
             </div>
         );
