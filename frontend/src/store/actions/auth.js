@@ -46,9 +46,18 @@ export const auth = (cpf, nome, telefone, isSignup) => {
             });  
 
         } else {
-            authData = {
-                cpf: cpf
-            };
+            axios.get('/users', { 
+                params: {
+                    cpf: cpf
+                }
+            })
+            .then(response => {
+                localStorage.setItem('token', response.data.data.token);
+                dispatch(authSuccess(response.data.data));
+            })
+            .catch(error => {
+                dispatch(authFailed(error.response.data.description));
+            });
 
         }
     };
