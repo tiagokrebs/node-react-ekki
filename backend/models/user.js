@@ -64,6 +64,32 @@ const findById = (id) => {
 }
 
 /**
+ * Obtem usuário de acordo com cpf
+ * @param {number} cpf Um número de cpf do usuário
+ */
+const findByCpf = (cpf) => {
+    return new Promise((resolve, reject) => {
+        let db = new sqlite3.Database(dbConfig.database, sqlite3.OPEN_READWRITE, (erro) => {
+            if (erro) {
+                throw erro
+            } else {
+                
+                let sql = 'SELECT * FROM usuarios WHERE cpf = ?';
+
+                db.get(sql, [cpf], (erro, row) => {
+                    if (erro) {
+                        reject(erro);
+                    }
+                    resolve(row);
+                });
+
+                db.close();
+            }
+        });
+    });
+}
+
+/**
  * Verifica existência de um usuário através do CPF
  * @param {string} cpf O documento de identificação do usário
  */
@@ -183,6 +209,7 @@ const findByIdAndRemove = (userId) => {
 module.exports = {
     find: find,
     findById: findById,
+    findByCpf: findByCpf,
     cpfExists: cpfExists,
     create: create,
     findByIdAndUpdate: findByIdAndUpdate,

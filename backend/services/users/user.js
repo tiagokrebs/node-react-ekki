@@ -17,8 +17,34 @@ const Favorecido = require('../../models/favorecido');
  * @param {function} next A função para passagem do controle para a próxima middleware
  */
 const getUsers = async (req, res, next) => {
+
+    const userCpf = req.query.cpf;
+
     try {
-        User.find()
+        if (userCpf !== undefined) {
+            User.findByCpf(userCpf)
+            .then(users => {
+                if (users) {
+                    return res.status(200).json({
+                        'message': 'usuários obtidos com sucesso',
+                        'data': users
+                    });
+                }
+
+                return res.status(404).json({
+                    'code': 'BAD_REQUEST_ERROR',
+                    'description': 'nenhum usuário encontrado'
+                });
+            })
+            .catch((erro) => {
+                console.log(erro);
+                return res.status(500).json({
+                    'code': 'SERVER_ERROR',
+                    'description': 'algo deu errado, tente novamente'
+                });
+            });
+        } else {
+            User.find()
             .then(users => {
                 if (users.length > 0) {
                     return res.status(200).json({
@@ -39,6 +65,7 @@ const getUsers = async (req, res, next) => {
                     'description': 'algo deu errado, tente novamente'
                 });
             });
+        }
 
     } catch (error) {
         console.log(error);
