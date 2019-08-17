@@ -62,3 +62,10 @@ export const auth = (cpf, nome, telefone, isSignup) => {
         }
     };
 };
+
+export const logout = () => {
+    localStorage.removeItem('token');
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    };
+};

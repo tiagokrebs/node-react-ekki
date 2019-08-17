@@ -10,6 +10,7 @@ import Conta from './containers/Conta/Conta';
 import Favorecidos from './containers/Favorecidos/Favorecidos';
 import Transacoes from './containers/Transacoes/Transacoes';
 import Perfil from './containers/Perfil/Perfil';
+import Logout from './containers/Home/Logout';
 
 class App extends Component {
   componentDidMount() {
@@ -31,6 +32,7 @@ class App extends Component {
           <Route path="/favorecidos" exact component={Favorecidos} />
           <Route path="/transacoes" exact component={Transacoes} />
           <Route path="/perfil" exact component={Perfil} />
+          <Route path="/logout" component={Logout} />
           <Redirect to="/" />
         </Switch>
       )
@@ -54,7 +56,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // todo: método simples para verificar token de usuário local
+    // todo: método simples para verificar token de usuário local e manter logado
   };
 };
 
