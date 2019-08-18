@@ -33,5 +33,15 @@ export const checkValidity = (value, rules) => {
         isValid = pattern.test(value) && isValid
     }
 
+    if (rules.isTelefone) {
+        const pattern = /^\(?\d{2}\)?[\s-]?[\s9]?\d{4}-?\d{4}$/;
+        isValid = pattern.test(value) && isValid
+    }
+
+    if (rules.isCpf) {
+        const pattern = /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/;
+        isValid = pattern.test(value) && isValid
+    }
+
     return isValid;
 };

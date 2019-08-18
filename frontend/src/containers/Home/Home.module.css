@@ -23,3 +23,8 @@
     justify-content: flex-end;
     padding: 1rem;
 }
+
+.InvalidInput {
+    border: 1px solid red;
+    background-color: #FDA49A; 
+ }

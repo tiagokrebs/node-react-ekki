@@ -25,11 +25,12 @@ class Home extends Component {
             cpf: {
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Seu CPF',
+                    placeholder: 'Seu CPF (somente números)',                    
                 },
                 value: '',
                 validation: {
                     required: true,
+                    isCpf: true
                 },
                 valid: false,
                 touched: false
@@ -37,11 +38,12 @@ class Home extends Component {
             telefone: {
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Seu Telefone',
+                    placeholder: 'Seu Telefone com DDD',
                 },
                 value: '',
                 validation: {
                     required: true,
+                    isTelefone: true
                 },
                 valid: false,
                 touched: false
@@ -94,20 +96,14 @@ class Home extends Component {
             form = formElementsArray.map((formElement, idx) => (
                 <Form.Group className="row" key={formElement.id}>
                     <div className="col-lg-12 col-md-12">
-                        {/* <Form.Label>Nome</Form.Label> */}
                         <Form.Control
                             type={formElement.config.elementConfig.type}
-                            // name="nome"
                             placeholder={formElement.config.elementConfig.placeholder}
                             value={formElement.config.value}
                             onChange={(event) => this.inputChangedHandler(event, formElement.id)}
-                            // onBlur={this.inputBlurHandler}
-                            // isInvalid={this.state.inputs.nome.touched && this.state.inputs.nome.invalid}
+                            isInvalid={!formElement.config.valid && formElement.config.touched}
                             autoFocus={idx === 0}
                         />
-                        <FormControl.Feedback type="invalid">
-                            {/* {this.state.inputs.nome.error} */}
-                        </FormControl.Feedback>
                     </div>
                 </Form.Group>
             ));
