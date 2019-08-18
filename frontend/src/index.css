@@ -4,12 +4,12 @@ html, body {
 
 body {
   font-family: "Open Sans";
-  color: #ceb992;
+  color: #eef5db;
   direction: ltr;
-  background: #5b2e48;
-  background: -moz-radial-gradient(center, ellipse farthest-corner, #471323 0%, #360e1a 100%);
-  background: -webkit-radial-gradient(center, ellipse farthest-corner, #471323 0%, #360e1a 100%);
-  background: radial-gradient(ellipse at center, #471323 0%, #360e1a 100%);
+  background: #3c3744;
+  background: -moz-radial-gradient(center, ellipse farthest-corner, #524b5e 0%, #302b38 100%);
+  background: -webkit-radial-gradient(center, ellipse farthest-corner, #524b5e 0%, #302b38 100%);
+  background: radial-gradient(ellipse at center, #524b5e 0%, #302b38 100%);
   font-weight: 400;
   background-attachment: fixed;
 }

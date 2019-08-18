@@ -112,7 +112,7 @@ class Home extends Component {
         const modalForm = (
             <Modal show backdrop='static'>
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ color: '#471323' }}>Bem vindo ao Ekki</Modal.Title>
+                    <Modal.Title style={{ color: '#3c3744' }}>Bem vindo ao Ekki</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className={classes.Header}>
@@ -144,7 +144,7 @@ class Home extends Component {
                                 </div>
                                 <div className={classes.FormError}>
                                     {
-                                        this.props.error ? <p>{this.props.error}</p> : null
+                                        this.props.error ? <p>{this.props.error.charAt(0).toUpperCase() + this.props.error.slice(1)}</p> : null
                                     }
                                 </div>
                             </Form>
@@ -152,7 +152,7 @@ class Home extends Component {
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <small>Seu login é efetuado pelo eu CPF</small>
+                    <small style={{color: '#3c3744'}}>O login é efetuado através do seu CPF</small>
                 </Modal.Footer>
             </Modal>
         );
@@ -176,7 +176,7 @@ class Home extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.error,
+        error: state.auth.error
     };
 };
 
