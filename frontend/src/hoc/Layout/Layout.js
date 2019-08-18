@@ -30,7 +30,9 @@ class Layout extends Component {
         let layout = (
             <Aux>
                 <main className={classes.ContentHome}>
-                    {this.props.children}
+                    <div className="container">
+                        {this.props.children}
+                    </div>                    
                 </main>
             </Aux>
         )
@@ -46,7 +48,9 @@ class Layout extends Component {
                         open={this.state.showSideDrawer}
                         closed={this.sideDrawerClosedHandler} />
                     <main className={classes.Content}>
-                        {this.props.children}
+                        <div className="container">
+                            {this.props.children}
+                        </div>
                     </main>
                 </Aux>
             )

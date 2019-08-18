@@ -1,5 +1,18 @@
+html, body {
+  height: 100%;
+}
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans";
+  color: #ceb992;
+  direction: ltr;
+  background: #5b2e48;
+  background: -moz-radial-gradient(center, ellipse farthest-corner, #471323 0%, #360e1a 100%);
+  background: -webkit-radial-gradient(center, ellipse farthest-corner, #471323 0%, #360e1a 100%);
+  background: radial-gradient(ellipse at center, #471323 0%, #360e1a 100%);
+  font-weight: 400;
+  background-attachment: fixed;
+}
+#root {
+  height: 100%;
 }

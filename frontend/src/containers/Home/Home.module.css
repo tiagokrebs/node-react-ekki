@@ -1,0 +1,25 @@
+.Header {
+    margin-bottom: 15px;
+    text-align: center;
+}
+.Header p {
+    color: #471323;
+}
+
+.FormFooter {
+    display: flex;
+    justify-content: flex-end;
+    /* padding: 1rem; */
+    /* border-top: 1px solid #e9ecef; */
+}
+
+.FormFooter button {
+    margin-right: .50rem;
+}
+
+.FormError {
+    color: #c53b3b;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+}
